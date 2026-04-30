@@ -1,0 +1,12 @@
+Şu an backend tarafında durumum:
+
+🔥 Tamamlananlar
+Auth (JWT)
+Middleware (protected routes)
+Swagger (API docs)
+Projects CRUD
+Skills CRUD
+Experiences CRUD
+Profile (single record yönetimi)
+Prisma + MySQL + Migration sistemi
+Clean structure (controller / service / validation)

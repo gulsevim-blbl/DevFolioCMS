@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.loginHandler = void 0;
+const asyncHandler_1 = require("../../utils/asyncHandler");
+const auth_validation_1 = require("./auth.validation");
+const auth_service_1 = require("./auth.service");
+exports.loginHandler = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const validatedData = auth_validation_1.loginSchema.parse(req.body);
+    const result = await (0, auth_service_1.loginUser)(validatedData);
+    return res.status(200).json({
+        success: true,
+        message: "Login successful",
+        data: result
+    });
+});
