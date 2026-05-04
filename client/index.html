@@ -1,13 +1,60 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>client</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+</head>
+
+<body>
+  <div id="root">
+    <style>
+      .gb-initial-loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100vh;
+        background: radial-gradient(circle at 8% 12%, rgba(37, 99, 235, 0.32), transparent 28%),
+                    linear-gradient(135deg, #0f1f3d 0%, #172554 38%, #dbeafe 100%);
+        background-size: 140% 140%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+      }
+      .gb-initial-logo {
+        font-family: "Inter", "Geist", "Segoe UI Variable", sans-serif;
+        font-size: 4rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        color: #ffffff;
+        background: linear-gradient(to right, #60a5fa, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gb-pulse 1.5s ease-in-out infinite alternate;
+      }
+      @keyframes gb-pulse {
+        0% {
+          opacity: 0.7;
+          transform: scale(0.95);
+          filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.4));
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.05);
+          filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.6));
+        }
+      }
+    </style>
+    <div class="gb-initial-loader">
+      <div class="gb-initial-logo">G/B</div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

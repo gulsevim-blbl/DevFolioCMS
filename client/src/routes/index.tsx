@@ -1,22 +1,31 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "../pages/LoginPage";
-import AdminDashboardPage from "../pages/AdminDashboardPage";
+import { lazy, Suspense } from "react";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminLayout from "../layouts/AdminLayout";
-import AdminProjectsPage from "../pages/AdminProjectsPage";
-import AdminSkillsPage from "../pages/AdminSkillsPage";
-import AdminExperiencesPage from "../pages/AdminExperiencesPage";
-import AdminProfilePage from "../pages/AdminProfilePage";
-import HomePage from "../pages/HomePage";
+import GBLoader from "../components/GBLoader";
+
+const HomePage = lazy(() => import("../pages/HomePage"));
+const LoginPage = lazy(() => import("../pages/LoginPage"));
+const AdminDashboardPage = lazy(() => import("../pages/AdminDashboardPage"));
+const AdminProjectsPage = lazy(() => import("../pages/AdminProjectsPage"));
+const AdminSkillsPage = lazy(() => import("../pages/AdminSkillsPage"));
+const AdminExperiencesPage = lazy(() => import("../pages/AdminExperiencesPage"));
+const AdminProfilePage = lazy(() => import("../pages/AdminProfilePage"));
+
+const withLoader = (Component: React.ElementType) => (
+  <Suspense fallback={<GBLoader />}>
+    <Component />
+  </Suspense>
+);
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: withLoader(HomePage),
   },
   {
     path: "/login",
-    element: <LoginPage />,
+    element: withLoader(LoginPage),
   },
   {
     element: <ProtectedRoute />,
@@ -27,23 +36,23 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <AdminDashboardPage />,
+            element: withLoader(AdminDashboardPage),
           },
           {
             path: "projects",
-            element: <AdminProjectsPage />,
+            element: withLoader(AdminProjectsPage),
           },
           {
             path: "skills",
-            element: <AdminSkillsPage />,
+            element: withLoader(AdminSkillsPage),
           },
           {
             path: "experiences",
-            element: <AdminExperiencesPage />,
+            element: withLoader(AdminExperiencesPage),
           },
           {
             path: "profile",
-            element: <AdminProfilePage />,
+            element: withLoader(AdminProfilePage),
           },
         ],
       },

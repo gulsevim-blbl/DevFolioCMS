@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { getProfile, updateProfile, uploadProfileCv, uploadProfileImage } from "../api/profile.api";
 import { useI18n } from "../i18n/useI18n";
 import type { Profile } from "../types/profile";
+import GBLoader from "../components/GBLoader";
 import "../styles/pages/profile.css";
 
 function getInitials(fullName: string) {
@@ -79,11 +80,7 @@ export default function AdminProfilePage() {
   }
 
   if (!profile && !error) {
-    return (
-      <div className="page">
-        <div className="empty-state">{t("profile.loading")}</div>
-      </div>
-    );
+    return <GBLoader />;
   }
 
   if (!profile) {

@@ -8,6 +8,7 @@ import type { Experience } from "../types/experience";
 import type { Profile } from "../types/profile";
 import type { Project } from "../types/project";
 import type { Skill } from "../types/skill";
+import GBLoader from "../components/GBLoader";
 import "../styles/pages/home.css";
 
 type HomeData = {
@@ -41,6 +42,42 @@ function formatDate(value: string | null) {
     month: "short",
     year: "numeric"
   }).format(new Date(value));
+}
+
+function getSkillMeta(name: string) {
+  const normalized = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  const mappings: Record<string, { icon: string, color: string }> = {
+    react: { icon: "devicon-react-original", color: "#61DAFB" },
+    nextjs: { icon: "devicon-nextjs-plain", color: "#ffffff" },
+    typescript: { icon: "devicon-typescript-plain", color: "#3178C6" },
+    javascript: { icon: "devicon-javascript-plain", color: "#F7DF1E" },
+    html: { icon: "devicon-html5-plain", color: "#E34F26" },
+    css: { icon: "devicon-css3-plain", color: "#1572B6" },
+    tailwind: { icon: "devicon-tailwindcss-plain", color: "#06B6D4" },
+    tailwindcss: { icon: "devicon-tailwindcss-plain", color: "#06B6D4" },
+    node: { icon: "devicon-nodejs-plain", color: "#339933" },
+    nodejs: { icon: "devicon-nodejs-plain", color: "#339933" },
+    git: { icon: "devicon-git-plain", color: "#F05032" },
+    docker: { icon: "devicon-docker-plain", color: "#2496ED" },
+    c: { icon: "devicon-c-plain", color: "#A8B9CC" },
+    cplusplus: { icon: "devicon-cplusplus-plain", color: "#00599C" },
+    cpp: { icon: "devicon-cplusplus-plain", color: "#00599C" },
+    csharp: { icon: "devicon-csharp-plain", color: "#239120" },
+    python: { icon: "devicon-python-plain", color: "#3776AB" },
+    java: { icon: "devicon-java-plain", color: "#007396" },
+    mysql: { icon: "devicon-mysql-plain", color: "#4479A1" },
+    postgresql: { icon: "devicon-postgresql-plain", color: "#336791" },
+    mongodb: { icon: "devicon-mongodb-plain", color: "#47A248" },
+    php: { icon: "devicon-php-plain", color: "#777BB4" },
+    vue: { icon: "devicon-vuejs-plain", color: "#4FC08D" },
+    angular: { icon: "devicon-angularjs-plain", color: "#DD0031" },
+    rust: { icon: "devicon-rust-plain", color: "#000000" },
+    go: { icon: "devicon-go-original-wordmark", color: "#00ADD8" },
+    ruby: { icon: "devicon-ruby-plain", color: "#CC342D" },
+  };
+
+  return mappings[normalized] || { icon: "devicon-devicon-plain", color: "#94a3b8" };
 }
 
 export default function HomePage() {
@@ -92,11 +129,7 @@ export default function HomePage() {
   }
 
   if (!data) {
-    return (
-      <main className="portfolio-page">
-        <div className="portfolio-state">Loading portfolio...</div>
-      </main>
-    );
+    return <GBLoader />;
   }
 
   const { profile, projects, experiences } = data;
@@ -263,25 +296,29 @@ export default function HomePage() {
           <span>{t("home.skillsSubtitle", { count: skillCount })}</span>
         </div>
 
-        <div className="portfolio-skill-grid">
-          {groupedSkills.map(([category, skills]) => (
-            <article className="portfolio-skill-group" key={category}>
-              <h3>{category}</h3>
-              <div className="portfolio-skill-list">
-                {skills.map((skill) => (
-                  <div className="portfolio-skill-item" key={skill.id}>
-                    <div>
-                      <span>{skill.name}</span>
-                      <strong>{skill.level}</strong>
-                    </div>
-                    <div className="portfolio-skill-bar">
-                      <span style={{ width: `${skill.level}%` }} />
-                    </div>
-                  </div>
-                ))}
+        <div className="new-skill-grid">
+          {data.skills.map((skill) => {
+            const meta = getSkillMeta(skill.name);
+            return (
+              <div
+                className="new-skill-card"
+                key={skill.id}
+                style={{ "--skill-color": meta.color } as React.CSSProperties}
+              >
+                <div className="skill-icon-glow"></div>
+                <div className="skill-icon-wrapper">
+                  <i className={`${meta.icon} colored`}></i>
+                </div>
+                <span className="skill-name">{skill.name}</span>
+                <div className="skill-progress-bar">
+                  <div
+                    className="skill-progress-fill"
+                    style={{ width: `${skill.level}%` }}
+                  ></div>
+                </div>
               </div>
-            </article>
-          ))}
+            );
+          })}
         </div>
       </section>
 
