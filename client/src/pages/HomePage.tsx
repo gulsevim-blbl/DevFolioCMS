@@ -46,7 +46,7 @@ function formatDate(value: string | null) {
 
 function getSkillMeta(name: string) {
   const normalized = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-  
+
   const mappings: Record<string, { icon: string, color: string }> = {
     react: { icon: "devicon-react-original", color: "#61DAFB" },
     nextjs: { icon: "devicon-nextjs-plain", color: "#ffffff" },

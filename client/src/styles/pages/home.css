@@ -698,7 +698,7 @@
   position: relative;
   z-index: 2;
   color: var(--skill-color);
-  filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
 }
 
 .skill-name {
