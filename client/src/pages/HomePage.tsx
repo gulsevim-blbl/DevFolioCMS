@@ -202,6 +202,7 @@ export default function HomePage() {
         <div className="portfolio-nav-actions">
           <div className="portfolio-nav-links">
             {[
+              { label: t("home.nav.about"), href: "#about" },
               { label: t("home.nav.work"), href: "#work" },
               { label: t("home.nav.skills"), href: "#skills" },
               { label: t("home.nav.experience"), href: "#experience" },
