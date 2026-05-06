@@ -31,6 +31,15 @@ function getInitials(fullName: string) {
     .toUpperCase();
 }
 
+function getHeroName(fullName: string) {
+  const nameParts = fullName
+    .split(" ")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return nameParts.slice(0, 2).join(" ") || fullName;
+}
+
 function getTechnologies(technologies: string) {
   return technologies
     .split(",")
@@ -177,12 +186,10 @@ export default function HomePage() {
   }
 
   const { profile, projects, experiences } = data;
-  const skillCount = data.skills.length;
-  const experienceCount = experiences.length;
-  const projectCount = projects.length;
   const profileTitle = getLocalizedValue(language, profile.title, profile.titleTr);
   const profileShortBio = getLocalizedValue(language, profile.shortBio, profile.shortBioTr);
   const profileAbout = getLocalizedValue(language, profile.about, profile.aboutTr);
+  const heroName = getHeroName(profile.fullName);
 
   return (
     <motion.main
@@ -252,8 +259,12 @@ export default function HomePage() {
           <motion.p className="portfolio-eyebrow" variants={fadeInUp}>
             {t("home.heroEyebrow")}
           </motion.p>
-          <motion.h1 variants={fadeInUp}>{profile.fullName}</motion.h1>
-          <motion.h2 variants={fadeInUp}>{profileTitle}</motion.h2>
+          <motion.h1 className="portfolio-hero-title" variants={fadeInUp}>
+            {t("home.heroIntro", { name: heroName })}
+          </motion.h1>
+          <motion.h2 className="portfolio-hero-role" variants={fadeInUp}>
+            <span>{profileTitle || t("home.heroRole")}</span>
+          </motion.h2>
           <motion.p className="portfolio-copy" variants={fadeInUp}>
             {profileShortBio || t("home.heroText")}
           </motion.p>
@@ -278,6 +289,13 @@ export default function HomePage() {
             >
               {t("home.heroButtonWork")}
             </motion.a>
+            <motion.a
+              className="portfolio-button secondary"
+              href="#contact"
+              whileHover={{ y: -2, scale: 1.02 }}
+            >
+              {t("home.heroButtonContact")}
+            </motion.a>
             {profile.cvUrl && (
               <motion.a
                 className="portfolio-button secondary"
@@ -290,17 +308,42 @@ export default function HomePage() {
             )}
           </motion.div>
 
-          <motion.div className="portfolio-hero-stat-grid" variants={staggerSection}>
-            {[
-              { key: "projects", label: t("home.heroStatProjects"), value: projectCount },
-              { key: "skills", label: t("home.heroStatSkills"), value: skillCount },
-              { key: "experience", label: t("home.heroStatExperience"), value: experienceCount }
-            ].map((stat) => (
-              <motion.div className="portfolio-hero-stat" key={stat.key} variants={fadeInUp} whileHover={{ y: -4 }}>
-                <span>{stat.label}</span>
-                <strong>{stat.value}</strong>
-              </motion.div>
-            ))}
+          <motion.div className="portfolio-hero-socials" variants={staggerSection} aria-label={t("home.socialLinks")}>
+            {profile.githubUrl && (
+              <motion.a
+                href={profile.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={t("common.github")}
+                title={t("common.github")}
+                variants={fadeInUp}
+                whileHover={{ y: -3, scale: 1.05 }}
+              >
+                <i className="devicon-github-original" aria-hidden="true"></i>
+              </motion.a>
+            )}
+            {profile.linkedinUrl && (
+              <motion.a
+                href={profile.linkedinUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+                variants={fadeInUp}
+                whileHover={{ y: -3, scale: 1.05 }}
+              >
+                in
+              </motion.a>
+            )}
+            <motion.a
+              href={`mailto:${profile.email}`}
+              aria-label={t("home.contactButtonEmail")}
+              title={t("home.contactButtonEmail")}
+              variants={fadeInUp}
+              whileHover={{ y: -3, scale: 1.05 }}
+            >
+              @
+            </motion.a>
           </motion.div>
         </motion.div>
 

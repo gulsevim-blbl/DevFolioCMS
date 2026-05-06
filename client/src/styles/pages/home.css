@@ -159,53 +159,76 @@
 }
 
 .portfolio-hero {
-  min-height: auto;
+  min-height: calc(100vh - 82px);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 28px;
-  align-items: center;
-  padding: 72px 0 80px;
+  align-items: start;
+  padding: clamp(32px, 5vw, 58px) 0 clamp(68px, 8vw, 104px);
   position: relative;
   z-index: 1;
   overflow: hidden;
 }
 
-.portfolio-hero::before,
+.portfolio-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.52;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(90deg, #000 0%, #000 72%, transparent 100%);
+}
+
 .portfolio-hero::after {
   content: "";
   position: absolute;
-  pointer-events: none;
-  border-radius: 999px;
-  filter: blur(80px);
-  opacity: 0.36;
-}
-
-.portfolio-hero::before {
-  width: 520px;
+  inset: auto -12% -22% 18%;
+  z-index: -1;
   height: 520px;
-  top: -120px;
-  right: 3%;
-  background: rgba(59, 130, 246, 0.18);
-}
-
-.portfolio-hero::after {
-  width: 320px;
-  height: 320px;
-  bottom: -80px;
-  left: -40px;
-  background: rgba(96, 165, 250, 0.16);
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 22% 34%, rgba(124, 58, 237, 0.28), transparent 28%),
+    radial-gradient(circle at 64% 34%, rgba(16, 185, 129, 0.16), transparent 32%),
+    radial-gradient(circle at 92% 20%, rgba(236, 72, 153, 0.22), transparent 30%),
+    radial-gradient(circle at 66% 76%, rgba(37, 99, 235, 0.28), transparent 34%);
+  filter: blur(26px);
+  opacity: 0.95;
 }
 
 .portfolio-hero-content {
-  max-width: 1080px;
-  padding: clamp(28px, 5vw, 58px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at 88% 14%, rgba(96, 165, 250, 0.18), transparent 30%),
-    linear-gradient(145deg, rgba(15, 23, 42, 0.36), rgba(7, 20, 49, 0.24));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 70px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(14px);
+  max-width: 920px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.portfolio-hero-status {
+  width: max-content;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  padding: 9px 18px;
+  border: 1px solid rgba(168, 85, 247, 0.34);
+  border-radius: 999px;
+  color: #c4b5fd;
+  background: rgba(15, 23, 42, 0.34);
+  box-shadow: 0 18px 48px rgba(124, 58, 237, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.portfolio-hero-status span {
+  color: #38bdf8;
+  font-size: 17px;
 }
 
 .portfolio-eyebrow {
@@ -222,18 +245,44 @@
   margin: 0;
   max-width: 940px;
   color: #ffffff;
-  font-size: clamp(44px, 7vw, 88px);
-  line-height: 0.95;
+  font-size: clamp(58px, 9vw, 112px);
+  line-height: 0.9;
   letter-spacing: 0;
   animation: portfolioFadeUp 800ms 90ms ease both;
 }
 
+.portfolio-hero-title {
+  display: block;
+  max-width: 1000px;
+}
+
+.portfolio-hero-role {
+  width: max-content;
+  max-width: 100%;
+}
+
+.portfolio-hero-role span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  color: transparent;
+  background: linear-gradient(90deg, #bfdbfe, #8b5cf6 48%, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  border-right: 3px solid #8b5cf6;
+  filter: drop-shadow(0 10px 28px rgba(139, 92, 246, 0.22));
+  animation:
+    portfolioTyping 5200ms steps(28, end) 520ms infinite,
+    portfolioCaret 850ms step-end infinite;
+}
+
 .portfolio-hero h2 {
-  margin: 18px 0 0;
-  color: #bfdbfe;
-  font-size: clamp(22px, 3vw, 34px);
+  margin: 32px 0 0;
+  color: #f8fbff;
+  font-size: clamp(22px, 3vw, 32px);
   line-height: 1.18;
-  font-weight: 650;
+  font-weight: 500;
   animation: portfolioFadeUp 800ms 180ms ease both;
 }
 
@@ -365,31 +414,61 @@
 
 .portfolio-copy {
   margin-top: 24px;
-  max-width: 700px;
-  color: #dbeafe;
-  font-size: 16px;
+  max-width: 760px;
+  color: #cbd5e1;
+  font-size: clamp(17px, 2vw, 22px);
   line-height: 1.75;
 }
 
 .portfolio-hero-pill-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 14px;
+  margin-top: 30px;
 }
 
 .portfolio-hero-pill {
   display: inline-flex;
   align-items: center;
-  padding: 10px 16px;
+  min-height: 46px;
+  padding: 10px 20px;
   border-radius: 999px;
   color: #eff6ff;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  font-size: 11px;
+  background: rgba(15, 23, 42, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  font-size: 13px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.portfolio-hero-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 44px;
+}
+
+.portfolio-hero-socials a {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: #e5e7eb;
+  background: rgba(15, 23, 42, 0.52);
+  box-shadow: 0 18px 42px rgba(37, 99, 235, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-size: 20px;
+  font-weight: 850;
+  backdrop-filter: blur(14px);
+}
+
+.portfolio-hero-socials a:hover {
+  color: #ffffff;
+  border-color: rgba(147, 197, 253, 0.38);
+  background: rgba(30, 41, 59, 0.78);
 }
 
 .portfolio-hero-stat-grid {
@@ -1131,6 +1210,33 @@
   }
 }
 
+@keyframes portfolioTyping {
+  0% {
+    width: 0;
+  }
+
+  46%,
+  76% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes portfolioCaret {
+
+  0%,
+  100% {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: #8b5cf6;
+  }
+}
+
 @keyframes portfolioFadeScale {
   from {
     opacity: 0;
@@ -1259,6 +1365,16 @@
     display: grid;
   }
 
+  .portfolio-hero-role {
+    width: 100%;
+  }
+
+  .portfolio-hero-role span {
+    white-space: normal;
+    border-right: 0;
+    animation: portfolioFadeUp 800ms 180ms ease both;
+  }
+
   .portfolio-contact {
     padding: 22px;
   }
@@ -1279,6 +1395,7 @@
   .portfolio-eyebrow,
   .portfolio-hero h1,
   .portfolio-hero h2,
+  .portfolio-hero-role span,
   .portfolio-hero-content>p:last-of-type,
   .portfolio-actions,
   .portfolio-hero-card,
@@ -1291,6 +1408,10 @@
   .portfolio-back-to-top,
   .portfolio-state {
     animation: none;
+  }
+
+  .portfolio-hero-role span {
+    border-right: 0;
   }
 
   .portfolio-brand,
