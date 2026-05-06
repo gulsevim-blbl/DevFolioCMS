@@ -123,6 +123,7 @@ export default function HomePage() {
   const { language, setLanguage, t } = useI18n();
   const [data, setData] = useState<HomeData | null>(null);
   const [error, setError] = useState("");
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -147,6 +148,21 @@ export default function HomePage() {
 
     void loadData();
   }, [t]);
+
+  useEffect(() => {
+    function handleScroll() {
+      setShowBackToTop(window.scrollY > 320);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  function handleBackToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   if (error) {
     return (
@@ -516,6 +532,20 @@ export default function HomePage() {
           </motion.article>
         </div>
       </motion.section>
+
+      <motion.button
+        className={showBackToTop ? "portfolio-back-to-top visible" : "portfolio-back-to-top"}
+        type="button"
+        onClick={handleBackToTop}
+        aria-label={t("home.backToTop")}
+        title={t("home.backToTop")}
+        initial={false}
+        animate={showBackToTop ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 14, scale: 0.94 }}
+        whileHover={{ y: -3, scale: 1.04 }}
+        whileTap={{ scale: 0.96 }}
+      >
+        <span aria-hidden="true">↑</span>
+      </motion.button>
     </motion.main>
   );
 }

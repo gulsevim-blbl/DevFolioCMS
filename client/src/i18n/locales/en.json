@@ -26,6 +26,7 @@
   "nav.profile": "Profile",
   "home.navLabel": "Portfolio navigation",
   "home.loadError": "Portfolio content could not be loaded.",
+  "home.backToTop": "Back to top",
   "home.nav.work": "My Projects",
   "home.nav.skills": "My Skills",
   "home.nav.experience": "My Experience",

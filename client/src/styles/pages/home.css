@@ -1039,6 +1039,39 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+.portfolio-back-to-top {
+  position: fixed;
+  right: clamp(18px, 3vw, 32px);
+  bottom: clamp(18px, 3vw, 32px);
+  z-index: 20;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(191, 219, 254, 0.34);
+  border-radius: 16px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(56, 189, 248, 0.42), transparent 34%),
+    linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(124, 58, 237, 0.9));
+  box-shadow: 0 18px 44px rgba(2, 6, 23, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.portfolio-back-to-top.visible {
+  pointer-events: auto;
+}
+
+.portfolio-back-to-top span {
+  display: block;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .portfolio-state {
   width: min(520px, calc(100% - 32px));
   display: grid;
@@ -1227,6 +1260,12 @@
   .portfolio-contact {
     padding: 22px;
   }
+
+  .portfolio-back-to-top {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1247,6 +1286,7 @@
   .portfolio-timeline::before,
   .portfolio-timeline-dot,
   .portfolio-contact,
+  .portfolio-back-to-top,
   .portfolio-state {
     animation: none;
   }
@@ -1258,6 +1298,7 @@
   .portfolio-project-card,
   .portfolio-skill-group,
   .portfolio-timeline-item,
+  .portfolio-back-to-top,
   .portfolio-chip-list span,
   .portfolio-card-actions a {
     transition: none;
