@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { useI18n } from "../i18n/useI18n";
 import { getExperiences } from "../api/experience.api";
 import { getProfile } from "../api/profile.api";
@@ -8,6 +10,7 @@ import type { Experience } from "../types/experience";
 import type { Profile } from "../types/profile";
 import type { Project } from "../types/project";
 import type { Skill } from "../types/skill";
+import type { Language } from "../i18n/types";
 import GBLoader from "../components/GBLoader";
 import "../styles/pages/home.css";
 
@@ -35,13 +38,25 @@ function getTechnologies(technologies: string) {
     .filter(Boolean);
 }
 
-function formatDate(value: string | null) {
-  if (!value) return "Present";
+function formatDate(value: string | null, language: Language, fallback: string) {
+  if (!value) return fallback;
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(language === "tr" ? "tr-TR" : "en-US", {
     month: "short",
     year: "numeric"
   }).format(new Date(value));
+}
+
+function getLocalizedValue(
+  language: Language,
+  defaultValue: string,
+  localizedValue?: string | null
+) {
+  if (language === "tr" && localizedValue?.trim()) {
+    return localizedValue;
+  }
+
+  return defaultValue;
 }
 
 function getSkillMeta(name: string) {
@@ -53,7 +68,9 @@ function getSkillMeta(name: string) {
     typescript: { icon: "devicon-typescript-plain", color: "#3178C6" },
     javascript: { icon: "devicon-javascript-plain", color: "#F7DF1E" },
     html: { icon: "devicon-html5-plain", color: "#E34F26" },
+    html5: { icon: "devicon-html5-plain", color: "#E34F26" },
     css: { icon: "devicon-css3-plain", color: "#1572B6" },
+    css3: { icon: "devicon-css3-plain", color: "#1572B6" },
     tailwind: { icon: "devicon-tailwindcss-plain", color: "#06B6D4" },
     tailwindcss: { icon: "devicon-tailwindcss-plain", color: "#06B6D4" },
     node: { icon: "devicon-nodejs-plain", color: "#339933" },
@@ -66,12 +83,22 @@ function getSkillMeta(name: string) {
     csharp: { icon: "devicon-csharp-plain", color: "#239120" },
     python: { icon: "devicon-python-plain", color: "#3776AB" },
     java: { icon: "devicon-java-plain", color: "#007396" },
+    sql: { icon: "devicon-microsoftsqlserver-plain", color: "#CC2927" },
+    mssql: { icon: "devicon-microsoftsqlserver-plain", color: "#CC2927" },
+    microsoftsqlserver: { icon: "devicon-microsoftsqlserver-plain", color: "#CC2927" },
     mysql: { icon: "devicon-mysql-plain", color: "#4479A1" },
     postgresql: { icon: "devicon-postgresql-plain", color: "#336791" },
     mongodb: { icon: "devicon-mongodb-plain", color: "#47A248" },
     php: { icon: "devicon-php-plain", color: "#777BB4" },
     vue: { icon: "devicon-vuejs-plain", color: "#4FC08D" },
+    vuejs: { icon: "devicon-vuejs-plain", color: "#4FC08D" },
+    vue2: { icon: "devicon-vuejs-plain", color: "#4FC08D" },
+    vue3: { icon: "devicon-vuejs-plain", color: "#4FC08D" },
     angular: { icon: "devicon-angularjs-plain", color: "#DD0031" },
+    kubernetes: { icon: "devicon-kubernetes-plain", color: "#326CE5" },
+    k8s: { icon: "devicon-kubernetes-plain", color: "#326CE5" },
+    linux: { icon: "devicon-linux-plain", color: "#FCC624" },
+    bootstrap: { icon: "devicon-bootstrap-plain", color: "#7952B3" },
     rust: { icon: "devicon-rust-plain", color: "#000000" },
     go: { icon: "devicon-go-original-wordmark", color: "#00ADD8" },
     ruby: { icon: "devicon-ruby-plain", color: "#CC342D" },
@@ -80,8 +107,20 @@ function getSkillMeta(name: string) {
   return mappings[normalized] || { icon: "devicon-devicon-plain", color: "#94a3b8" };
 }
 
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const staggerSection: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+};
+
+const hoverLift = { y: -6, scale: 1.01 };
+
 export default function HomePage() {
-  const { t } = useI18n();
+  const { language, setLanguage, t } = useI18n();
   const [data, setData] = useState<HomeData | null>(null);
   const [error, setError] = useState("");
 
@@ -102,23 +141,12 @@ export default function HomePage() {
           experiences: experiences.filter((experience) => experience.published)
         });
       } catch {
-        setError("Portfolio content could not be loaded.");
+        setError(t("home.loadError"));
       }
     }
 
     void loadData();
-  }, []);
-
-  const groupedSkills = useMemo(() => {
-    if (!data) return [];
-
-    return Object.entries(
-      data.skills.reduce<Record<string, Skill[]>>((groups, skill) => {
-        groups[skill.category] = [...(groups[skill.category] ?? []), skill];
-        return groups;
-      }, {})
-    );
-  }, [data]);
+  }, [t]);
 
   if (error) {
     return (
@@ -136,132 +164,194 @@ export default function HomePage() {
   const skillCount = data.skills.length;
   const experienceCount = experiences.length;
   const projectCount = projects.length;
+  const profileTitle = getLocalizedValue(language, profile.title, profile.titleTr);
+  const profileShortBio = getLocalizedValue(language, profile.shortBio, profile.shortBioTr);
+  const profileAbout = getLocalizedValue(language, profile.about, profile.aboutTr);
 
   return (
-    <main className="portfolio-page">
-      <nav className="portfolio-nav" aria-label={t("home.navLabel")}>
+    <motion.main
+      className="portfolio-page"
+      initial="hidden"
+      animate="visible"
+      variants={staggerSection}
+    >
+      <motion.nav
+        className="portfolio-nav"
+        aria-label={t("home.navLabel")}
+        variants={fadeInUp}
+      >
         <a className="portfolio-brand" href="#home">
           {getInitials(profile.fullName) || "DF"}
         </a>
-        <div className="portfolio-nav-links">
-          <a href="#work">{t("home.nav.work")}</a>
-          <a href="#skills">{t("home.nav.skills")}</a>
-          <a href="#experience">{t("home.nav.experience")}</a>
-          <a href="#contact">{t("profile.contactSection")}</a>
-        </div>
-      </nav>
-
-      <section className="portfolio-hero" id="home">
-        <div className="portfolio-hero-content">
-          <p className="portfolio-eyebrow">{t("home.heroEyebrow")}</p>
-          <h1>{profile.fullName}</h1>
-          <h2>{profile.title}</h2>
-          <p className="portfolio-copy">{profile.shortBio || t("home.heroText")}</p>
-
-          <div className="portfolio-hero-pill-grid">
-            <span className="portfolio-hero-pill">{t("home.heroPillA")}</span>
-            <span className="portfolio-hero-pill">{t("home.heroPillB")}</span>
-            <span className="portfolio-hero-pill">{t("home.heroPillC")}</span>
+        <div className="portfolio-nav-actions">
+          <div className="portfolio-nav-links">
+            {[
+              { label: t("home.nav.work"), href: "#work" },
+              { label: t("home.nav.skills"), href: "#skills" },
+              { label: t("home.nav.experience"), href: "#experience" },
+              { label: t("profile.contactSection"), href: "#contact" }
+            ].map((item) => (
+              <motion.a
+                key={item.href}
+                href={item.href}
+                variants={fadeInUp}
+                whileHover={{ y: -2, scale: 1.02 }}
+              >
+                {item.label}
+              </motion.a>
+            ))}
           </div>
 
-          <div className="portfolio-actions">
-            <a className="portfolio-button primary" href="#work">
+          <div className="portfolio-language-switcher" aria-label={t("common.language")}>
+            <button
+              className={language === "tr" ? "portfolio-language-option active" : "portfolio-language-option"}
+              type="button"
+              onClick={() => setLanguage("tr")}
+              aria-pressed={language === "tr"}
+            >
+              TR
+            </button>
+            <button
+              className={language === "en" ? "portfolio-language-option active" : "portfolio-language-option"}
+              type="button"
+              onClick={() => setLanguage("en")}
+              aria-pressed={language === "en"}
+            >
+              EN
+            </button>
+          </div>
+        </div>
+      </motion.nav>
+
+      <motion.section
+        className="portfolio-hero"
+        id="home"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25 }}
+      >
+        <motion.div className="portfolio-hero-content" variants={staggerSection}>
+          <motion.p className="portfolio-eyebrow" variants={fadeInUp}>
+            {t("home.heroEyebrow")}
+          </motion.p>
+          <motion.h1 variants={fadeInUp}>{profile.fullName}</motion.h1>
+          <motion.h2 variants={fadeInUp}>{profileTitle}</motion.h2>
+          <motion.p className="portfolio-copy" variants={fadeInUp}>
+            {profileShortBio || t("home.heroText")}
+          </motion.p>
+
+          <motion.div className="portfolio-hero-pill-grid" variants={staggerSection}>
+            {[
+              { key: "design", label: t("home.heroPillA") },
+              { key: "stack", label: t("home.heroPillB") },
+              { key: "performance", label: t("home.heroPillC") }
+            ].map((pill) => (
+              <motion.span className="portfolio-hero-pill" key={pill.key} variants={fadeInUp} whileHover={{ y: -2 }}>
+                {pill.label}
+              </motion.span>
+            ))}
+          </motion.div>
+
+          <motion.div className="portfolio-actions" variants={fadeInUp}>
+            <motion.a
+              className="portfolio-button primary"
+              href="#work"
+              whileHover={{ y: -2, scale: 1.02 }}
+            >
               {t("home.heroButtonWork")}
-            </a>
+            </motion.a>
             {profile.cvUrl && (
-              <a className="portfolio-button secondary" href={profile.cvUrl} download>
+              <motion.a
+                className="portfolio-button secondary"
+                href={profile.cvUrl}
+                download
+                whileHover={{ y: -2, scale: 1.02 }}
+              >
                 {t("home.heroButtonCV")}
-              </a>
+              </motion.a>
             )}
-          </div>
+          </motion.div>
 
-          <div className="portfolio-hero-stat-grid">
-            <div className="portfolio-hero-stat">
-              <span>Projects shipped</span>
-              <strong>{projectCount}</strong>
-            </div>
-            <div className="portfolio-hero-stat">
-              <span>Skill focus</span>
-              <strong>{skillCount}</strong>
-            </div>
-            <div className="portfolio-hero-stat">
-              <span>Experience cards</span>
-              <strong>{experienceCount}</strong>
-            </div>
-          </div>
-        </div>
+          <motion.div className="portfolio-hero-stat-grid" variants={staggerSection}>
+            {[
+              { key: "projects", label: t("home.heroStatProjects"), value: projectCount },
+              { key: "skills", label: t("home.heroStatSkills"), value: skillCount },
+              { key: "experience", label: t("home.heroStatExperience"), value: experienceCount }
+            ].map((stat) => (
+              <motion.div className="portfolio-hero-stat" key={stat.key} variants={fadeInUp} whileHover={{ y: -4 }}>
+                <span>{stat.label}</span>
+                <strong>{stat.value}</strong>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
 
-        <aside className="portfolio-hero-card">
-          {profile.imageUrl ? (
-            <img src={profile.imageUrl} alt={profile.fullName} />
-          ) : (
-            <div className="portfolio-avatar">{getInitials(profile.fullName)}</div>
-          )}
+      </motion.section>
 
-          <div className="portfolio-hero-card-meta">
-            <span className="badge">{t("home.availableForHire")}</span>
-            <strong>{profile.location || t("home.remote")}</strong>
-          </div>
-
-          <div className="portfolio-hero-card-list">
-            <div>
-              <p>{t("home.primaryFocus")}</p>
-              <strong>{profile.title}</strong>
-            </div>
-            <div>
-              <p>{t("home.contactLabel")}</p>
-              <strong>{profile.email}</strong>
-            </div>
-          </div>
-        </aside>
-      </section>
-
-      <section className="portfolio-section portfolio-about" id="about">
+      <motion.section
+        className="portfolio-section portfolio-about"
+        id="about"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25 }}
+        variants={fadeInUp}
+      >
         <div className="portfolio-section-header">
           <div>
             <p className="portfolio-eyebrow">{t("home.aboutEyebrow")}</p>
             <h2>{t("home.aboutTitle")}</h2>
           </div>
-          <span>{profile.location || t("home.remote")}</span>
         </div>
 
         <div className="portfolio-about-grid">
           <div className="portfolio-about-copy">
-            <p>{profile.about}</p>
+            <p>{profileAbout}</p>
           </div>
 
           <div className="portfolio-feature-grid">
-            <article className="portfolio-feature-card">
+            <motion.article className="portfolio-feature-card" variants={fadeInUp} whileHover={hoverLift}>
               <h3>{t("home.aboutFeature1Title")}</h3>
               <p>{t("home.aboutFeature1Text")}</p>
-            </article>
-            <article className="portfolio-feature-card">
+            </motion.article>
+            <motion.article className="portfolio-feature-card" variants={fadeInUp} whileHover={hoverLift}>
               <h3>{t("home.aboutFeature2Title")}</h3>
               <p>{t("home.aboutFeature2Text")}</p>
-            </article>
-            <article className="portfolio-feature-card">
+            </motion.article>
+            <motion.article className="portfolio-feature-card" variants={fadeInUp} whileHover={hoverLift}>
               <h3>{t("home.aboutFeature3Title")}</h3>
               <p>{t("home.aboutFeature3Text")}</p>
-            </article>
+            </motion.article>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="portfolio-section" id="work">
+      <motion.section
+        className="portfolio-section"
+        id="work"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={fadeInUp}
+      >
         <div className="portfolio-section-header">
           <div>
             <p className="portfolio-eyebrow">{t("home.workEyebrow")}</p>
             <h2>{t("home.workTitle")}</h2>
           </div>
-          <span>{t("home.workSubtitle", { count: projectCount })}</span>
         </div>
 
         <div className="portfolio-project-grid">
           {projects.map((project) => (
-            <article className="portfolio-project-card" key={project.id}>
+            <motion.article
+              className="portfolio-project-card"
+              key={project.id}
+              variants={fadeInUp}
+              whileHover={hoverLift}
+            >
               <div className="project-card-head">
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
+                <h3>{getLocalizedValue(language, project.title, project.titleTr)}</h3>
+                <p>{getLocalizedValue(language, project.description, project.descriptionTr)}</p>
               </div>
 
               <div className="portfolio-chip-list">
@@ -273,37 +363,45 @@ export default function HomePage() {
               <div className="portfolio-card-actions">
                 {project.githubUrl && (
                   <a href={project.githubUrl} target="_blank" rel="noreferrer">
-                    GitHub
+                    {t("common.github")}
                   </a>
                 )}
                 {project.liveUrl && (
                   <a href={project.liveUrl} target="_blank" rel="noreferrer">
-                    Live
+                    {t("common.live")}
                   </a>
                 )}
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="portfolio-section" id="skills">
+      <motion.section
+        className="portfolio-section"
+        id="skills"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.22 }}
+        variants={fadeInUp}
+      >
         <div className="portfolio-section-header">
           <div>
             <p className="portfolio-eyebrow">{t("home.skillsEyebrow")}</p>
             <h2>{t("home.skillsTitle")}</h2>
           </div>
-          <span>{t("home.skillsSubtitle", { count: skillCount })}</span>
         </div>
 
         <div className="new-skill-grid">
           {data.skills.map((skill) => {
             const meta = getSkillMeta(skill.name);
             return (
-              <div
+              <motion.div
                 className="new-skill-card"
                 key={skill.id}
                 style={{ "--skill-color": meta.color } as React.CSSProperties}
+                variants={fadeInUp}
+                whileHover={hoverLift}
               >
                 <div className="skill-icon-glow"></div>
                 <div className="skill-icon-wrapper">
@@ -316,39 +414,57 @@ export default function HomePage() {
                     style={{ width: `${skill.level}%` }}
                   ></div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="portfolio-section" id="experience">
+      <motion.section
+        className="portfolio-section"
+        id="experience"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={fadeInUp}
+      >
         <div className="portfolio-section-header">
           <div>
             <p className="portfolio-eyebrow">{t("home.experienceEyebrow")}</p>
             <h2>{t("home.experienceTitle")}</h2>
           </div>
-          <span>{t("home.experienceSubtitle", { count: experienceCount })}</span>
         </div>
 
         <div className="portfolio-timeline">
           {experiences.map((experience) => (
-            <article className="portfolio-timeline-item" key={experience.id}>
+            <motion.article
+              className="portfolio-timeline-item"
+              key={experience.id}
+              variants={fadeInUp}
+              whileHover={hoverLift}
+            >
               <div className="portfolio-timeline-dot" aria-hidden="true" />
               <div>
-                <h3>{experience.position}</h3>
-                <p>{experience.company}</p>
+                <h3>{getLocalizedValue(language, experience.position, experience.positionTr)}</h3>
+                <p>{getLocalizedValue(language, experience.company, experience.companyTr)}</p>
                 <span>
-                  {formatDate(experience.startDate)} - {experience.isCurrent ? t("home.present") : formatDate(experience.endDate)}
+                  {formatDate(experience.startDate, language, t("home.present"))} - {experience.isCurrent ? t("home.present") : formatDate(experience.endDate, language, t("home.present"))}
                 </span>
-                <p>{experience.description}</p>
+                <p>{getLocalizedValue(language, experience.description, experience.descriptionTr)}</p>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="portfolio-contact" id="contact">
+      <motion.section
+        className="portfolio-contact"
+        id="contact"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25 }}
+        variants={fadeInUp}
+      >
         <div className="portfolio-section-header">
           <div>
             <p className="portfolio-eyebrow">{t("profile.contactSection")}</p>
@@ -358,32 +474,48 @@ export default function HomePage() {
         </div>
 
         <div className="portfolio-contact-grid">
-          <article className="portfolio-contact-card">
+          <motion.article className="portfolio-contact-card" variants={fadeInUp} whileHover={hoverLift}>
             <h3>{t("home.contactCardTitle")}</h3>
             <p>{t("home.contactCardMessage")}</p>
-            <a className="portfolio-button primary" href={`mailto:${profile.email}`}>
+            <motion.a
+              className="portfolio-button primary"
+              href={`mailto:${profile.email}`}
+              whileHover={{ y: -2, scale: 1.02 }}
+            >
               {t("home.contactButtonEmail")}
-            </a>
-          </article>
+            </motion.a>
+          </motion.article>
 
-          <article className="portfolio-contact-card">
+          <motion.article className="portfolio-contact-card" variants={fadeInUp} whileHover={hoverLift}>
             <h3>{t("home.followTitle")}</h3>
             <p>{t("home.followMessage")}</p>
             <div className="portfolio-card-actions">
               {profile.githubUrl && (
-                <a className="portfolio-button secondary" href={profile.githubUrl} target="_blank" rel="noreferrer">
+                <motion.a
+                  className="portfolio-button secondary"
+                  href={profile.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  whileHover={{ y: -2, scale: 1.02 }}
+                >
                   {t("common.github")}
-                </a>
+                </motion.a>
               )}
               {profile.linkedinUrl && (
-                <a className="portfolio-button secondary" href={profile.linkedinUrl} target="_blank" rel="noreferrer">
+                <motion.a
+                  className="portfolio-button secondary"
+                  href={profile.linkedinUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  whileHover={{ y: -2, scale: 1.02 }}
+                >
                   LinkedIn
-                </a>
+                </motion.a>
               )}
             </div>
-          </article>
+          </motion.article>
         </div>
-      </section>
-    </main>
+      </motion.section>
+    </motion.main>
   );
 }

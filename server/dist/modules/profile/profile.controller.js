@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadProfileCvHandler = exports.upsertProfileHandler = exports.getProfileHandler = void 0;
+exports.uploadProfileImageHandler = exports.uploadProfileCvHandler = exports.upsertProfileHandler = exports.getProfileHandler = void 0;
 const asyncHandler_1 = require("../../utils/asyncHandler");
 const AppError_1 = require("../../utils/AppError");
 const profile_validation_1 = require("./profile.validation");
@@ -30,6 +30,18 @@ exports.uploadProfileCvHandler = (0, asyncHandler_1.asyncHandler)(async (req, re
     return res.status(200).json({
         success: true,
         message: "CV uploaded successfully",
+        data: profile
+    });
+});
+exports.uploadProfileImageHandler = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    if (!req.file) {
+        throw new AppError_1.AppError("Profile image is required", 400);
+    }
+    const imageUrl = `${req.protocol}://${req.get("host")}/uploads/avatar/${req.file.filename}`;
+    const profile = await (0, profile_service_1.updateProfileImage)(imageUrl);
+    return res.status(200).json({
+        success: true,
+        message: "Profile image uploaded successfully",
         data: profile
     });
 });

@@ -11,10 +11,59 @@ type CreateSkillInput = {
 
 type UpdateSkillInput = Partial<CreateSkillInput>;
 
+function normalizeSkillName(name: string) {
+  const trimmedName = name.trim();
+  const key = trimmedName.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  const aliases: Record<string, string> = {
+    angular: "Angular",
+    bootstrap: "Bootstrap",
+    c: "C",
+    cpp: "C++",
+    cplusplus: "C++",
+    csharp: "C#",
+    css: "CSS3",
+    css3: "CSS3",
+    docker: "Docker",
+    git: "Git",
+    html: "HTML5",
+    html5: "HTML5",
+    javascript: "JavaScript",
+    js: "JavaScript",
+    k8s: "Kubernetes",
+    kubernetes: "Kubernetes",
+    linux: "Linux",
+    mongodb: "MongoDB",
+    mssql: "SQL",
+    mysql: "MySQL",
+    next: "Next.js",
+    nextjs: "Next.js",
+    node: "Node.js",
+    nodejs: "Node.js",
+    php: "PHP",
+    postgresql: "PostgreSQL",
+    postgres: "PostgreSQL",
+    python: "Python",
+    react: "React",
+    rust: "Rust",
+    sql: "SQL",
+    tailwind: "Tailwind CSS",
+    tailwindcss: "Tailwind CSS",
+    ts: "TypeScript",
+    typescript: "TypeScript",
+    vue: "Vue.js",
+    vuejs: "Vue.js",
+    vue2: "Vue.js",
+    vue3: "Vue.js"
+  };
+
+  return aliases[key] ?? trimmedName;
+}
+
 export async function createSkill(input: CreateSkillInput) {
   return prisma.skill.create({
     data: {
-      name: input.name,
+      name: normalizeSkillName(input.name),
       category: input.category,
       level: input.level ?? 50,
       sortOrder: input.sortOrder ?? 0,
@@ -51,7 +100,7 @@ export async function updateSkill(id: number, input: UpdateSkillInput) {
   return prisma.skill.update({
     where: { id },
     data: {
-      name: input.name,
+      name: input.name === undefined ? undefined : normalizeSkillName(input.name),
       category: input.category,
       level: input.level,
       sortOrder: input.sortOrder,

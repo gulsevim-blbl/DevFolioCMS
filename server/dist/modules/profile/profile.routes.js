@@ -12,7 +12,9 @@ const AppError_1 = require("../../utils/AppError");
 const profile_controller_1 = require("./profile.controller");
 const router = (0, express_1.Router)();
 const cvUploadDir = path_1.default.resolve(process.cwd(), "uploads", "cv");
+const avatarUploadDir = path_1.default.resolve(process.cwd(), "uploads", "avatar");
 fs_1.default.mkdirSync(cvUploadDir, { recursive: true });
+fs_1.default.mkdirSync(avatarUploadDir, { recursive: true });
 const cvUpload = (0, multer_1.default)({
     storage: multer_1.default.diskStorage({
         destination: cvUploadDir,
@@ -37,6 +39,31 @@ const cvUpload = (0, multer_1.default)({
         fileSize: 5 * 1024 * 1024
     }
 });
+const avatarUpload = (0, multer_1.default)({
+    storage: multer_1.default.diskStorage({
+        destination: avatarUploadDir,
+        filename: (_req, file, callback) => {
+            const extension = path_1.default.extname(file.originalname).toLowerCase();
+            callback(null, `avatar-${Date.now()}${extension}`);
+        }
+    }),
+    fileFilter: (_req, file, callback) => {
+        const allowedMimeTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif"
+        ];
+        if (!allowedMimeTypes.includes(file.mimetype)) {
+            callback(new AppError_1.AppError("Only JPEG, PNG, WebP or GIF images are allowed", 400));
+            return;
+        }
+        callback(null, true);
+    },
+    limits: {
+        fileSize: 2 * 1024 * 1024
+    }
+});
 /**
  * @openapi
  * /api/profile:
@@ -50,6 +77,7 @@ const cvUpload = (0, multer_1.default)({
  */
 router.get("/", profile_controller_1.getProfileHandler);
 router.post("/cv", auth_middleware_1.authenticate, cvUpload.single("cv"), profile_controller_1.uploadProfileCvHandler);
+router.post("/image", auth_middleware_1.authenticate, avatarUpload.single("image"), profile_controller_1.uploadProfileImageHandler);
 /**
  * @openapi
  * /api/profile:

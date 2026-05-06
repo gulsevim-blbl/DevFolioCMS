@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { I18nContext } from "./i18n-context";
 import en from "./locales/en.json";
@@ -19,6 +19,10 @@ function getInitialLanguage(): Language {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   const value = useMemo<I18nContextValue>(() => {
     function setLanguage(nextLanguage: Language) {

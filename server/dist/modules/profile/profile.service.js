@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProfile = getProfile;
 exports.upsertProfile = upsertProfile;
 exports.updateProfileCv = updateProfileCv;
+exports.updateProfileImage = updateProfileImage;
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const AppError_1 = require("../../utils/AppError");
 async function getProfile() {
@@ -49,6 +50,20 @@ async function updateProfileCv(cvUrl) {
         },
         data: {
             cvUrl
+        }
+    });
+}
+async function updateProfileImage(imageUrl) {
+    const existingProfile = await prisma_1.default.profile.findFirst();
+    if (!existingProfile) {
+        throw new AppError_1.AppError("Profile not found", 404);
+    }
+    return prisma_1.default.profile.update({
+        where: {
+            id: existingProfile.id
+        },
+        data: {
+            imageUrl
         }
     });
 }
