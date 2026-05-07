@@ -5,7 +5,9 @@ import { AppError } from "../../utils/AppError";
 type CreateExperienceInput = {
   company: string;
   position: string;
+  positionTr?: string | null;
   description: string;
+  descriptionTr?: string | null;
   startDate: Date;
   endDate?: Date | null;
   isCurrent?: boolean;
@@ -21,7 +23,9 @@ export async function createExperience(input: CreateExperienceInput) {
     data: {
       company: input.company,
       position: input.position,
+      positionTr: input.positionTr || null,
       description: input.description,
+      descriptionTr: input.descriptionTr || null,
       startDate: input.startDate,
       endDate: input.endDate ?? null,
       isCurrent: input.isCurrent ?? false,
@@ -62,7 +66,9 @@ export async function updateExperience(id: number, input: UpdateExperienceInput)
     data: {
       company: input.company,
       position: input.position,
+      positionTr: input.positionTr === "" ? null : input.positionTr,
       description: input.description,
+      descriptionTr: input.descriptionTr === "" ? null : input.descriptionTr,
       startDate: input.startDate,
       endDate: input.endDate,
       isCurrent: input.isCurrent,

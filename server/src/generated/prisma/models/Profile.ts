@@ -38,8 +38,11 @@ export type ProfileMinAggregateOutputType = {
   id: number | null
   fullName: string | null
   title: string | null
+  titleTr: string | null
   shortBio: string | null
+  shortBioTr: string | null
   about: string | null
+  aboutTr: string | null
   email: string | null
   phone: string | null
   location: string | null
@@ -55,8 +58,11 @@ export type ProfileMaxAggregateOutputType = {
   id: number | null
   fullName: string | null
   title: string | null
+  titleTr: string | null
   shortBio: string | null
+  shortBioTr: string | null
   about: string | null
+  aboutTr: string | null
   email: string | null
   phone: string | null
   location: string | null
@@ -72,8 +78,11 @@ export type ProfileCountAggregateOutputType = {
   id: number
   fullName: number
   title: number
+  titleTr: number
   shortBio: number
+  shortBioTr: number
   about: number
+  aboutTr: number
   email: number
   phone: number
   location: number
@@ -99,8 +108,11 @@ export type ProfileMinAggregateInputType = {
   id?: true
   fullName?: true
   title?: true
+  titleTr?: true
   shortBio?: true
+  shortBioTr?: true
   about?: true
+  aboutTr?: true
   email?: true
   phone?: true
   location?: true
@@ -116,8 +128,11 @@ export type ProfileMaxAggregateInputType = {
   id?: true
   fullName?: true
   title?: true
+  titleTr?: true
   shortBio?: true
+  shortBioTr?: true
   about?: true
+  aboutTr?: true
   email?: true
   phone?: true
   location?: true
@@ -133,8 +148,11 @@ export type ProfileCountAggregateInputType = {
   id?: true
   fullName?: true
   title?: true
+  titleTr?: true
   shortBio?: true
+  shortBioTr?: true
   about?: true
+  aboutTr?: true
   email?: true
   phone?: true
   location?: true
@@ -237,8 +255,11 @@ export type ProfileGroupByOutputType = {
   id: number
   fullName: string
   title: string
+  titleTr: string | null
   shortBio: string
+  shortBioTr: string | null
   about: string
+  aboutTr: string | null
   email: string
   phone: string | null
   location: string | null
@@ -277,8 +298,11 @@ export type ProfileWhereInput = {
   id?: Prisma.IntFilter<"Profile"> | number
   fullName?: Prisma.StringFilter<"Profile"> | string
   title?: Prisma.StringFilter<"Profile"> | string
+  titleTr?: Prisma.StringNullableFilter<"Profile"> | string | null
   shortBio?: Prisma.StringFilter<"Profile"> | string
+  shortBioTr?: Prisma.StringNullableFilter<"Profile"> | string | null
   about?: Prisma.StringFilter<"Profile"> | string
+  aboutTr?: Prisma.StringNullableFilter<"Profile"> | string | null
   email?: Prisma.StringFilter<"Profile"> | string
   phone?: Prisma.StringNullableFilter<"Profile"> | string | null
   location?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -294,8 +318,11 @@ export type ProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  titleTr?: Prisma.SortOrderInput | Prisma.SortOrder
   shortBio?: Prisma.SortOrder
+  shortBioTr?: Prisma.SortOrderInput | Prisma.SortOrder
   about?: Prisma.SortOrder
+  aboutTr?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -315,8 +342,11 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   fullName?: Prisma.StringFilter<"Profile"> | string
   title?: Prisma.StringFilter<"Profile"> | string
+  titleTr?: Prisma.StringNullableFilter<"Profile"> | string | null
   shortBio?: Prisma.StringFilter<"Profile"> | string
+  shortBioTr?: Prisma.StringNullableFilter<"Profile"> | string | null
   about?: Prisma.StringFilter<"Profile"> | string
+  aboutTr?: Prisma.StringNullableFilter<"Profile"> | string | null
   email?: Prisma.StringFilter<"Profile"> | string
   phone?: Prisma.StringNullableFilter<"Profile"> | string | null
   location?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -332,8 +362,11 @@ export type ProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  titleTr?: Prisma.SortOrderInput | Prisma.SortOrder
   shortBio?: Prisma.SortOrder
+  shortBioTr?: Prisma.SortOrderInput | Prisma.SortOrder
   about?: Prisma.SortOrder
+  aboutTr?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -357,8 +390,11 @@ export type ProfileScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Profile"> | number
   fullName?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   title?: Prisma.StringWithAggregatesFilter<"Profile"> | string
+  titleTr?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   shortBio?: Prisma.StringWithAggregatesFilter<"Profile"> | string
+  shortBioTr?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   about?: Prisma.StringWithAggregatesFilter<"Profile"> | string
+  aboutTr?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   email?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
@@ -373,8 +409,11 @@ export type ProfileScalarWhereWithAggregatesInput = {
 export type ProfileCreateInput = {
   fullName: string
   title: string
+  titleTr?: string | null
   shortBio: string
+  shortBioTr?: string | null
   about: string
+  aboutTr?: string | null
   email: string
   phone?: string | null
   location?: string | null
@@ -390,8 +429,11 @@ export type ProfileUncheckedCreateInput = {
   id?: number
   fullName: string
   title: string
+  titleTr?: string | null
   shortBio: string
+  shortBioTr?: string | null
   about: string
+  aboutTr?: string | null
   email: string
   phone?: string | null
   location?: string | null
@@ -406,8 +448,11 @@ export type ProfileUncheckedCreateInput = {
 export type ProfileUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  titleTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortBio?: Prisma.StringFieldUpdateOperationsInput | string
+  shortBioTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   about?: Prisma.StringFieldUpdateOperationsInput | string
+  aboutTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -423,8 +468,11 @@ export type ProfileUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  titleTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortBio?: Prisma.StringFieldUpdateOperationsInput | string
+  shortBioTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   about?: Prisma.StringFieldUpdateOperationsInput | string
+  aboutTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -440,8 +488,11 @@ export type ProfileCreateManyInput = {
   id?: number
   fullName: string
   title: string
+  titleTr?: string | null
   shortBio: string
+  shortBioTr?: string | null
   about: string
+  aboutTr?: string | null
   email: string
   phone?: string | null
   location?: string | null
@@ -456,8 +507,11 @@ export type ProfileCreateManyInput = {
 export type ProfileUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  titleTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortBio?: Prisma.StringFieldUpdateOperationsInput | string
+  shortBioTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   about?: Prisma.StringFieldUpdateOperationsInput | string
+  aboutTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -473,8 +527,11 @@ export type ProfileUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  titleTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortBio?: Prisma.StringFieldUpdateOperationsInput | string
+  shortBioTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   about?: Prisma.StringFieldUpdateOperationsInput | string
+  aboutTr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -496,8 +553,11 @@ export type ProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  titleTr?: Prisma.SortOrder
   shortBio?: Prisma.SortOrder
+  shortBioTr?: Prisma.SortOrder
   about?: Prisma.SortOrder
+  aboutTr?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -517,8 +577,11 @@ export type ProfileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  titleTr?: Prisma.SortOrder
   shortBio?: Prisma.SortOrder
+  shortBioTr?: Prisma.SortOrder
   about?: Prisma.SortOrder
+  aboutTr?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -534,8 +597,11 @@ export type ProfileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  titleTr?: Prisma.SortOrder
   shortBio?: Prisma.SortOrder
+  shortBioTr?: Prisma.SortOrder
   about?: Prisma.SortOrder
+  aboutTr?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   location?: Prisma.SortOrder
@@ -557,8 +623,11 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   fullName?: boolean
   title?: boolean
+  titleTr?: boolean
   shortBio?: boolean
+  shortBioTr?: boolean
   about?: boolean
+  aboutTr?: boolean
   email?: boolean
   phone?: boolean
   location?: boolean
@@ -576,8 +645,11 @@ export type ProfileSelectScalar = {
   id?: boolean
   fullName?: boolean
   title?: boolean
+  titleTr?: boolean
   shortBio?: boolean
+  shortBioTr?: boolean
   about?: boolean
+  aboutTr?: boolean
   email?: boolean
   phone?: boolean
   location?: boolean
@@ -589,7 +661,7 @@ export type ProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "title" | "shortBio" | "about" | "email" | "phone" | "location" | "githubUrl" | "linkedinUrl" | "cvUrl" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "title" | "titleTr" | "shortBio" | "shortBioTr" | "about" | "aboutTr" | "email" | "phone" | "location" | "githubUrl" | "linkedinUrl" | "cvUrl" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
 
 export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Profile"
@@ -598,8 +670,11 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: number
     fullName: string
     title: string
+    titleTr: string | null
     shortBio: string
+    shortBioTr: string | null
     about: string
+    aboutTr: string | null
     email: string
     phone: string | null
     location: string | null
@@ -981,8 +1056,11 @@ export interface ProfileFieldRefs {
   readonly id: Prisma.FieldRef<"Profile", 'Int'>
   readonly fullName: Prisma.FieldRef<"Profile", 'String'>
   readonly title: Prisma.FieldRef<"Profile", 'String'>
+  readonly titleTr: Prisma.FieldRef<"Profile", 'String'>
   readonly shortBio: Prisma.FieldRef<"Profile", 'String'>
+  readonly shortBioTr: Prisma.FieldRef<"Profile", 'String'>
   readonly about: Prisma.FieldRef<"Profile", 'String'>
+  readonly aboutTr: Prisma.FieldRef<"Profile", 'String'>
   readonly email: Prisma.FieldRef<"Profile", 'String'>
   readonly phone: Prisma.FieldRef<"Profile", 'String'>
   readonly location: Prisma.FieldRef<"Profile", 'String'>

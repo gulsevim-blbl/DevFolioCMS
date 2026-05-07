@@ -143,7 +143,7 @@ export default function AdminProfilePage() {
                 </div>
 
                 <div className="field">
-                  <label htmlFor="profile-title">{t("fields.title")}</label>
+                  <label htmlFor="profile-title">{t("fields.title")} (EN)</label>
                   <input
                     id="profile-title"
                     className="input"
@@ -154,13 +154,25 @@ export default function AdminProfilePage() {
                     required
                   />
                 </div>
+
+                <div className="field">
+                  <label htmlFor="profile-title-tr">{t("fields.title")} (TR)</label>
+                  <input
+                    id="profile-title-tr"
+                    className="input"
+                    value={profile.titleTr || ""}
+                    onChange={(event) =>
+                      setProfile({ ...profile, titleTr: event.target.value })
+                    }
+                  />
+                </div>
               </div>
             </div>
 
             <div className="profile-section">
               <span className="profile-section-label">{t("profile.bioSection")}</span>
               <div className="field">
-                <label htmlFor="profile-short-bio">{t("fields.shortBio")}</label>
+                <label htmlFor="profile-short-bio">{t("fields.shortBio")} (EN)</label>
                 <textarea
                   id="profile-short-bio"
                   className="textarea"
@@ -173,7 +185,19 @@ export default function AdminProfilePage() {
               </div>
 
               <div className="field">
-                <label htmlFor="profile-about">{t("fields.about")}</label>
+                <label htmlFor="profile-short-bio-tr">{t("fields.shortBio")} (TR)</label>
+                <textarea
+                  id="profile-short-bio-tr"
+                  className="textarea"
+                  value={profile.shortBioTr || ""}
+                  onChange={(event) =>
+                    setProfile({ ...profile, shortBioTr: event.target.value })
+                  }
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="profile-about">{t("fields.about")} (EN)</label>
                 <textarea
                   id="profile-about"
                   className="textarea"
@@ -182,6 +206,18 @@ export default function AdminProfilePage() {
                     setProfile({ ...profile, about: event.target.value })
                   }
                   required
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="profile-about-tr">{t("fields.about")} (TR)</label>
+                <textarea
+                  id="profile-about-tr"
+                  className="textarea"
+                  value={profile.aboutTr || ""}
+                  onChange={(event) =>
+                    setProfile({ ...profile, aboutTr: event.target.value })
+                  }
                 />
               </div>
             </div>

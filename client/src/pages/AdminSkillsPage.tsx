@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
-import { createSkill, deleteSkill, getSkills } from "../api/skill.api";
+import { createSkill, deleteSkill, getSkills, updateSkill } from "../api/skill.api";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { useI18n } from "../i18n/useI18n";
 import type { Skill } from "../types/skill";
@@ -14,6 +14,7 @@ export default function AdminSkillsPage() {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Frontend");
   const [level, setLevel] = useState(50);
+  const [editingSkillId, setEditingSkillId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; message: string } | null>(null);
@@ -47,27 +48,46 @@ export default function AdminSkillsPage() {
     return () => window.clearTimeout(timeoutId);
   }, [loadSkills]);
 
+  function resetForm() {
+    setName("");
+    setCategory("Frontend");
+    setLevel(50);
+    setEditingSkillId(null);
+  }
+
+  function handleEdit(skill: Skill) {
+    setName(skill.name);
+    setCategory(skill.category);
+    setLevel(skill.level);
+    setEditingSkillId(skill.id);
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
     setError("");
 
+    const payload = {
+      name,
+      category,
+      level
+    };
+
     try {
-      await createSkill({
-        name,
-        category,
-        level,
-        sortOrder: skills.length + 1,
-        published: true
-      });
+      if (editingSkillId) {
+        await updateSkill(editingSkillId, payload);
+      } else {
+        await createSkill({
+          ...payload,
+          sortOrder: skills.length + 1,
+          published: true
+        });
+      }
 
-      setName("");
-      setCategory("Frontend");
-      setLevel(50);
-
+      resetForm();
       await loadSkills();
     } catch {
-      setError(t("skills.addError"));
+      setError(editingSkillId ? t("skills.updateError") : t("skills.addError"));
     } finally {
       setIsLoading(false);
     }
@@ -131,7 +151,7 @@ export default function AdminSkillsPage() {
         <form className="skills-form-card" onSubmit={handleSubmit}>
           <div className="skills-card-header">
             <div>
-              <h2>{t("skills.newTitle")}</h2>
+              <h2>{editingSkillId ? t("skills.editTitle") : t("skills.newTitle")}</h2>
               <p>{t("skills.newDescription")}</p>
             </div>
             <span className="skills-card-badge">{t("common.published")}</span>
@@ -179,8 +199,14 @@ export default function AdminSkillsPage() {
             </div>
 
             <button className="btn btn-primary btn-full" type="submit" disabled={isLoading}>
-              {isLoading ? t("skills.adding") : t("skills.add")}
+              {isLoading ? t("common.saving") : editingSkillId ? t("common.save") : t("skills.add")}
             </button>
+
+            {editingSkillId && (
+              <button className="btn btn-secondary btn-full" type="button" onClick={resetForm}>
+                {t("common.cancel")}
+              </button>
+            )}
           </div>
         </form>
 
@@ -221,9 +247,14 @@ export default function AdminSkillsPage() {
                         {skill.published ? t("common.published") : t("common.draft")}
                       </span>
                       <strong>{skill.level}</strong>
-                      <button className="btn btn-danger" onClick={() => handleDelete(skill.id)} type="button">
-                        {t("common.delete")}
-                      </button>
+                      <div className="skill-row-actions">
+                        <button className="btn btn-secondary" onClick={() => handleEdit(skill)} type="button">
+                          {t("common.edit")}
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(skill.id)} type="button">
+                          {t("common.delete")}
+                        </button>
+                      </div>
                     </div>
                   </article>
                 ))}
@@ -240,6 +271,7 @@ export default function AdminSkillsPage() {
         cancelText={t("common.cancel")}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-      />    </div>
+      />
+    </div>
   );
 }

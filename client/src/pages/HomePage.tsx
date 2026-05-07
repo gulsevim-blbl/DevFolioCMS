@@ -261,6 +261,7 @@ export default function HomePage() {
           </motion.p>
           <motion.h1 className="portfolio-hero-title" variants={fadeInUp}>
             {t("home.heroIntro", { name: heroName })}
+            <span className="portfolio-wave" aria-hidden="true">👋</span>
           </motion.h1>
           <motion.h2 className="portfolio-hero-role" variants={fadeInUp}>
             <span>{profileTitle || t("home.heroRole")}</span>

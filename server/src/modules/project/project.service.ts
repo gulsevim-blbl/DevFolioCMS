@@ -3,7 +3,9 @@ import { AppError } from "../../utils/AppError";
 
 type CreateProjectInput = {
   title: string;
+  titleTr?: string | null;
   description: string;
+  descriptionTr?: string | null;
   technologies: string;
   githubUrl?: string;
   liveUrl?: string;
@@ -37,8 +39,10 @@ export async function createProject(input: CreateProjectInput) {
   return prisma.project.create({
     data: {
       title: input.title,
+      titleTr: input.titleTr || null,
       slug,
       description: input.description,
+      descriptionTr: input.descriptionTr || null,
       technologies: input.technologies,
       githubUrl: input.githubUrl || null,
       liveUrl: input.liveUrl || null,
@@ -78,7 +82,9 @@ export async function updateProject(id: number, input: UpdateProjectInput) {
     where: { id },
     data: {
       title: input.title,
+      titleTr: input.titleTr === "" ? null : input.titleTr,
       description: input.description,
+      descriptionTr: input.descriptionTr === "" ? null : input.descriptionTr,
       technologies: input.technologies,
       githubUrl: input.githubUrl === "" ? null : input.githubUrl,
       liveUrl: input.liveUrl === "" ? null : input.liveUrl,

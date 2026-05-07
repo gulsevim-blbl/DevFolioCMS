@@ -1,0 +1,8 @@
+ALTER TABLE `Project`
+  ADD COLUMN `titleTr` VARCHAR(191) NULL,
+  ADD COLUMN `descriptionTr` TEXT NULL;
+
+ALTER TABLE `Profile`
+  ADD COLUMN `titleTr` VARCHAR(191) NULL,
+  ADD COLUMN `shortBioTr` TEXT NULL,
+  ADD COLUMN `aboutTr` TEXT NULL;

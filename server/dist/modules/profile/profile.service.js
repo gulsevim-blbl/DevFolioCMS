@@ -17,8 +17,11 @@ async function upsertProfile(input) {
     const data = {
         fullName: input.fullName,
         title: input.title,
+        titleTr: input.titleTr || null,
         shortBio: input.shortBio,
+        shortBioTr: input.shortBioTr || null,
         about: input.about,
+        aboutTr: input.aboutTr || null,
         email: input.email,
         phone: input.phone || null,
         location: input.location || null,

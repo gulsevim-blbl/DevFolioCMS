@@ -5,8 +5,11 @@ const zod_1 = require("zod");
 exports.upsertProfileSchema = zod_1.z.object({
     fullName: zod_1.z.string().min(1, "Full name is required"),
     title: zod_1.z.string().min(1, "Title is required"),
+    titleTr: zod_1.z.string().nullable().optional(),
     shortBio: zod_1.z.string().min(1, "Short bio is required"),
+    shortBioTr: zod_1.z.string().nullable().optional(),
     about: zod_1.z.string().min(1, "About is required"),
+    aboutTr: zod_1.z.string().nullable().optional(),
     email: zod_1.z.string().email("Please enter a valid email"),
     phone: zod_1.z.string().nullable().optional(),
     location: zod_1.z.string().nullable().optional(),

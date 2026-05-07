@@ -15,7 +15,9 @@ async function createExperience(input) {
         data: {
             company: input.company,
             position: input.position,
+            positionTr: input.positionTr || null,
             description: input.description,
+            descriptionTr: input.descriptionTr || null,
             startDate: input.startDate,
             endDate: input.endDate ?? null,
             isCurrent: input.isCurrent ?? false,
@@ -50,7 +52,9 @@ async function updateExperience(id, input) {
         data: {
             company: input.company,
             position: input.position,
+            positionTr: input.positionTr === "" ? null : input.positionTr,
             description: input.description,
+            descriptionTr: input.descriptionTr === "" ? null : input.descriptionTr,
             startDate: input.startDate,
             endDate: input.endDate,
             isCurrent: input.isCurrent,

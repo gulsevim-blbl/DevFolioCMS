@@ -4,8 +4,11 @@ import { AppError } from "../../utils/AppError";
 type UpsertProfileInput = {
   fullName: string;
   title: string;
+  titleTr?: string | null;
   shortBio: string;
+  shortBioTr?: string | null;
   about: string;
+  aboutTr?: string | null;
   email: string;
   phone?: string | null;
   location?: string | null;
@@ -25,8 +28,11 @@ export async function upsertProfile(input: UpsertProfileInput) {
   const data = {
     fullName: input.fullName,
     title: input.title,
+    titleTr: input.titleTr || null,
     shortBio: input.shortBio,
+    shortBioTr: input.shortBioTr || null,
     about: input.about,
+    aboutTr: input.aboutTr || null,
     email: input.email,
     phone: input.phone || null,
     location: input.location || null,

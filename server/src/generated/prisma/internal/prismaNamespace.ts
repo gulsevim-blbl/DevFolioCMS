@@ -791,8 +791,10 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const ProjectScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  titleTr: 'titleTr',
   slug: 'slug',
   description: 'description',
+  descriptionTr: 'descriptionTr',
   technologies: 'technologies',
   githubUrl: 'githubUrl',
   liveUrl: 'liveUrl',
@@ -825,7 +827,9 @@ export const ExperienceScalarFieldEnum = {
   id: 'id',
   company: 'company',
   position: 'position',
+  positionTr: 'positionTr',
   description: 'description',
+  descriptionTr: 'descriptionTr',
   startDate: 'startDate',
   endDate: 'endDate',
   isCurrent: 'isCurrent',
@@ -843,8 +847,11 @@ export const ProfileScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
   title: 'title',
+  titleTr: 'titleTr',
   shortBio: 'shortBio',
+  shortBioTr: 'shortBioTr',
   about: 'about',
+  aboutTr: 'aboutTr',
   email: 'email',
   phone: 'phone',
   location: 'location',
@@ -885,8 +892,10 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 export const ProjectOrderByRelevanceFieldEnum = {
   title: 'title',
+  titleTr: 'titleTr',
   slug: 'slug',
   description: 'description',
+  descriptionTr: 'descriptionTr',
   technologies: 'technologies',
   githubUrl: 'githubUrl',
   liveUrl: 'liveUrl',
@@ -907,7 +916,9 @@ export type SkillOrderByRelevanceFieldEnum = (typeof SkillOrderByRelevanceFieldE
 export const ExperienceOrderByRelevanceFieldEnum = {
   company: 'company',
   position: 'position',
+  positionTr: 'positionTr',
   description: 'description',
+  descriptionTr: 'descriptionTr',
   location: 'location'
 } as const
 
@@ -917,8 +928,11 @@ export type ExperienceOrderByRelevanceFieldEnum = (typeof ExperienceOrderByRelev
 export const ProfileOrderByRelevanceFieldEnum = {
   fullName: 'fullName',
   title: 'title',
+  titleTr: 'titleTr',
   shortBio: 'shortBio',
+  shortBioTr: 'shortBioTr',
   about: 'about',
+  aboutTr: 'aboutTr',
   email: 'email',
   phone: 'phone',
   location: 'location',

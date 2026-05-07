@@ -100,8 +100,10 @@ exports.UserScalarFieldEnum = {
 exports.ProjectScalarFieldEnum = {
     id: 'id',
     title: 'title',
+    titleTr: 'titleTr',
     slug: 'slug',
     description: 'description',
+    descriptionTr: 'descriptionTr',
     technologies: 'technologies',
     githubUrl: 'githubUrl',
     liveUrl: 'liveUrl',
@@ -126,7 +128,9 @@ exports.ExperienceScalarFieldEnum = {
     id: 'id',
     company: 'company',
     position: 'position',
+    positionTr: 'positionTr',
     description: 'description',
+    descriptionTr: 'descriptionTr',
     startDate: 'startDate',
     endDate: 'endDate',
     isCurrent: 'isCurrent',
@@ -140,8 +144,11 @@ exports.ProfileScalarFieldEnum = {
     id: 'id',
     fullName: 'fullName',
     title: 'title',
+    titleTr: 'titleTr',
     shortBio: 'shortBio',
+    shortBioTr: 'shortBioTr',
     about: 'about',
+    aboutTr: 'aboutTr',
     email: 'email',
     phone: 'phone',
     location: 'location',
@@ -166,8 +173,10 @@ exports.NullsOrder = {
 };
 exports.ProjectOrderByRelevanceFieldEnum = {
     title: 'title',
+    titleTr: 'titleTr',
     slug: 'slug',
     description: 'description',
+    descriptionTr: 'descriptionTr',
     technologies: 'technologies',
     githubUrl: 'githubUrl',
     liveUrl: 'liveUrl',
@@ -180,14 +189,19 @@ exports.SkillOrderByRelevanceFieldEnum = {
 exports.ExperienceOrderByRelevanceFieldEnum = {
     company: 'company',
     position: 'position',
+    positionTr: 'positionTr',
     description: 'description',
+    descriptionTr: 'descriptionTr',
     location: 'location'
 };
 exports.ProfileOrderByRelevanceFieldEnum = {
     fullName: 'fullName',
     title: 'title',
+    titleTr: 'titleTr',
     shortBio: 'shortBio',
+    shortBioTr: 'shortBioTr',
     about: 'about',
+    aboutTr: 'aboutTr',
     email: 'email',
     phone: 'phone',
     location: 'location',

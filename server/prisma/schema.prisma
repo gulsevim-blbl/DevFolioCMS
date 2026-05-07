@@ -18,8 +18,10 @@ model User {
 model Project {
   id          Int      @id @default(autoincrement())
   title       String
+  titleTr     String?
   slug        String   @unique
   description String   @db.Text
+  descriptionTr String? @db.Text
   technologies String  @db.Text
   githubUrl   String?
   liveUrl     String?
@@ -45,7 +47,9 @@ model Experience {
   id          Int      @id @default(autoincrement())
   company     String
   position    String
+  positionTr  String?
   description String   @db.Text
+  descriptionTr String? @db.Text
   startDate   DateTime
   endDate     DateTime?
   isCurrent   Boolean  @default(false)
@@ -60,8 +64,11 @@ model Profile {
   id          Int      @id @default(autoincrement())
   fullName    String
   title       String
+  titleTr     String?
   shortBio    String   @db.Text
+  shortBioTr  String?  @db.Text
   about       String   @db.Text
+  aboutTr     String?  @db.Text
   email       String
   phone       String?
   location    String?

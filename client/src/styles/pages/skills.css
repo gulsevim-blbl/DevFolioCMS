@@ -162,7 +162,7 @@
 
 .skill-row-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, auto);
   gap: 18px;
   padding: 16px;
   border: 1px solid var(--border);
@@ -251,6 +251,13 @@
   font-size: 13px;
 }
 
+.skill-row-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 @media (max-width: 1100px) {
   .skills-layout {
     grid-template-columns: 1fr;
@@ -281,5 +288,9 @@
 
   .skill-row-side .btn {
     width: 100%;
+  }
+
+  .skill-row-actions {
+    display: grid;
   }
 }

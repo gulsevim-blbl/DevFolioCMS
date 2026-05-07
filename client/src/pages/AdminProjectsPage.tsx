@@ -3,7 +3,8 @@ import type { FormEvent } from "react";
 import {
   createProject,
   deleteProject,
-  getProjects
+  getProjects,
+  updateProject
 } from "../api/project.api";
 import { useI18n } from "../i18n/useI18n";
 import type { Project } from "../types/project";
@@ -21,9 +22,12 @@ export default function AdminProjectsPage() {
   const { t } = useI18n();
   const [projects, setProjects] = useState<Project[]>([]);
   const [title, setTitle] = useState("");
+  const [titleTr, setTitleTr] = useState("");
   const [description, setDescription] = useState("");
+  const [descriptionTr, setDescriptionTr] = useState("");
   const [technologies, setTechnologies] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
+  const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; message: string } | null>(null);
@@ -46,30 +50,56 @@ export default function AdminProjectsPage() {
     return () => window.clearTimeout(timeoutId);
   }, [loadProjects]);
 
+  function resetForm() {
+    setTitle("");
+    setTitleTr("");
+    setDescription("");
+    setDescriptionTr("");
+    setTechnologies("");
+    setGithubUrl("");
+    setEditingProjectId(null);
+  }
+
+  function handleEdit(project: Project) {
+    setTitle(project.title);
+    setTitleTr(project.titleTr || "");
+    setDescription(project.description);
+    setDescriptionTr(project.descriptionTr || "");
+    setTechnologies(project.technologies);
+    setGithubUrl(project.githubUrl || "");
+    setEditingProjectId(project.id);
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
     setError("");
 
+    const payload = {
+      title,
+      titleTr,
+      description,
+      descriptionTr,
+      technologies,
+      githubUrl
+    };
+
     try {
-      await createProject({
-        title,
-        description,
-        technologies,
-        githubUrl,
-        featured: false,
-        published: true,
-        sortOrder: projects.length + 1
-      });
+      if (editingProjectId) {
+        await updateProject(editingProjectId, payload);
+      } else {
+        await createProject({
+          ...payload,
+          featured: false,
+          published: true,
+          sortOrder: projects.length + 1
+        });
+      }
 
-      setTitle("");
-      setDescription("");
-      setTechnologies("");
-      setGithubUrl("");
-
+      resetForm();
       await loadProjects();
     } catch {
-      setError(t("projects.addError"));
+      setError(editingProjectId ? t("projects.updateError") : t("projects.addError"));
     } finally {
       setIsLoading(false);
     }
@@ -123,7 +153,7 @@ export default function AdminProjectsPage() {
         <form className="projects-form-card" onSubmit={handleSubmit}>
           <div className="projects-card-header">
             <div>
-              <h2>{t("projects.newTitle")}</h2>
+              <h2>{editingProjectId ? t("projects.editTitle") : t("projects.newTitle")}</h2>
               <p>{t("projects.newDescription")}</p>
             </div>
             <span className="projects-card-badge">{t("common.published")}</span>
@@ -131,7 +161,7 @@ export default function AdminProjectsPage() {
 
           <div className="projects-form-body">
             <div className="field">
-              <label htmlFor="project-title">{t("fields.title")}</label>
+              <label htmlFor="project-title">{t("fields.title")} (EN)</label>
               <input
                 id="project-title"
                 className="input"
@@ -142,13 +172,34 @@ export default function AdminProjectsPage() {
             </div>
 
             <div className="field">
-              <label htmlFor="project-description">{t("fields.description")}</label>
+              <label htmlFor="project-title-tr">{t("fields.title")} (TR)</label>
+              <input
+                id="project-title-tr"
+                className="input"
+                value={titleTr}
+                onChange={(event) => setTitleTr(event.target.value)}
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="project-description">{t("fields.description")} (EN)</label>
               <textarea
                 id="project-description"
                 className="textarea"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
                 required
+                rows={4}
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="project-description-tr">{t("fields.description")} (TR)</label>
+              <textarea
+                id="project-description-tr"
+                className="textarea"
+                value={descriptionTr}
+                onChange={(event) => setDescriptionTr(event.target.value)}
                 rows={4}
               />
             </div>
@@ -177,8 +228,14 @@ export default function AdminProjectsPage() {
             </div>
 
             <button className="btn btn-primary btn-full" type="submit" disabled={isLoading}>
-              {isLoading ? t("projects.adding") : t("projects.add")}
+              {isLoading ? t("common.saving") : editingProjectId ? t("common.save") : t("projects.add")}
             </button>
+
+            {editingProjectId && (
+              <button className="btn btn-secondary btn-full" type="button" onClick={resetForm}>
+                {t("common.cancel")}
+              </button>
+            )}
           </div>
         </form>
 
@@ -206,6 +263,9 @@ export default function AdminProjectsPage() {
                         <div>
                           <h3>{project.title}</h3>
                           <p>{project.description}</p>
+                          {(project.titleTr || project.descriptionTr) && (
+                            <p>{[project.titleTr, project.descriptionTr].filter(Boolean).join(" - ")}</p>
+                          )}
                         </div>
                       </div>
 
@@ -224,6 +284,14 @@ export default function AdminProjectsPage() {
                       </span>
 
                       <div className="project-row-actions">
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleEdit(project)}
+                          type="button"
+                        >
+                          {t("common.edit")}
+                        </button>
+
                         {project.githubUrl && (
                           <a
                             className="btn btn-secondary"

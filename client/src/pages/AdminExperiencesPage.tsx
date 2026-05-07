@@ -3,7 +3,8 @@ import type { FormEvent } from "react";
 import {
   createExperience,
   deleteExperience,
-  getExperiences
+  getExperiences,
+  updateExperience
 } from "../api/experience.api";
 import { ConfirmModal } from "../components/ConfirmModal";
 import type { Language } from "../i18n/types";
@@ -19,16 +20,24 @@ function formatDate(value: string | null, language: Language, fallback: string) 
   }).format(new Date(value));
 }
 
+function toDateInputValue(value: string | null) {
+  if (!value) return "";
+  return value.slice(0, 10);
+}
+
 export default function AdminExperiencesPage() {
   const { language, t } = useI18n();
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
+  const [positionTr, setPositionTr] = useState("");
   const [description, setDescription] = useState("");
+  const [descriptionTr, setDescriptionTr] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [isCurrent, setIsCurrent] = useState(false);
   const [location, setLocation] = useState("");
+  const [editingExperienceId, setEditingExperienceId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; message: string } | null>(null);
@@ -64,11 +73,27 @@ export default function AdminExperiencesPage() {
   function resetForm() {
     setCompany("");
     setPosition("");
+    setPositionTr("");
     setDescription("");
+    setDescriptionTr("");
     setStartDate("");
     setEndDate("");
     setIsCurrent(false);
     setLocation("");
+    setEditingExperienceId(null);
+  }
+
+  function handleEdit(experience: Experience) {
+    setCompany(experience.company);
+    setPosition(experience.position);
+    setPositionTr(experience.positionTr || "");
+    setDescription(experience.description);
+    setDescriptionTr(experience.descriptionTr || "");
+    setStartDate(toDateInputValue(experience.startDate));
+    setEndDate(toDateInputValue(experience.endDate));
+    setIsCurrent(experience.isCurrent);
+    setLocation(experience.location || "");
+    setEditingExperienceId(experience.id);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -76,23 +101,33 @@ export default function AdminExperiencesPage() {
     setIsLoading(true);
     setError("");
 
+    const payload = {
+      company,
+      position,
+      positionTr,
+      description,
+      descriptionTr,
+      startDate,
+      endDate: isCurrent ? null : endDate,
+      isCurrent,
+      location
+    };
+
     try {
-      await createExperience({
-        company,
-        position,
-        description,
-        startDate,
-        endDate: isCurrent ? null : endDate,
-        isCurrent,
-        location,
-        sortOrder: experiences.length + 1,
-        published: true
-      });
+      if (editingExperienceId) {
+        await updateExperience(editingExperienceId, payload);
+      } else {
+        await createExperience({
+          ...payload,
+          sortOrder: experiences.length + 1,
+          published: true
+        });
+      }
 
       resetForm();
       await loadExperiences();
     } catch {
-      setError(t("experiences.addError"));
+      setError(editingExperienceId ? t("experiences.updateError") : t("experiences.addError"));
     } finally {
       setIsLoading(false);
     }
@@ -156,7 +191,7 @@ export default function AdminExperiencesPage() {
         <form className="experiences-form-card" onSubmit={handleSubmit}>
           <div className="experiences-card-header">
             <div>
-              <h2>{t("experiences.newTitle")}</h2>
+              <h2>{editingExperienceId ? t("experiences.editTitle") : t("experiences.newTitle")}</h2>
               <p>{t("experiences.newDescription")}</p>
             </div>
             <span className="experiences-card-badge">{t("common.published")}</span>
@@ -175,7 +210,7 @@ export default function AdminExperiencesPage() {
             </div>
 
             <div className="field">
-              <label htmlFor="experience-position">{t("fields.position")}</label>
+              <label htmlFor="experience-position">{t("fields.position")} (EN)</label>
               <input
                 id="experience-position"
                 className="input"
@@ -186,13 +221,33 @@ export default function AdminExperiencesPage() {
             </div>
 
             <div className="field">
-              <label htmlFor="experience-description">{t("fields.description")}</label>
+              <label htmlFor="experience-position-tr">{t("fields.position")} (TR)</label>
+              <input
+                id="experience-position-tr"
+                className="input"
+                value={positionTr}
+                onChange={(event) => setPositionTr(event.target.value)}
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="experience-description">{t("fields.description")} (EN)</label>
               <textarea
                 id="experience-description"
                 className="textarea"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
                 required
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="experience-description-tr">{t("fields.description")} (TR)</label>
+              <textarea
+                id="experience-description-tr"
+                className="textarea"
+                value={descriptionTr}
+                onChange={(event) => setDescriptionTr(event.target.value)}
               />
             </div>
 
@@ -243,8 +298,14 @@ export default function AdminExperiencesPage() {
             </div>
 
             <button className="btn btn-primary btn-full" type="submit" disabled={isLoading}>
-              {isLoading ? t("experiences.adding") : t("experiences.add")}
+              {isLoading ? t("common.saving") : editingExperienceId ? t("common.save") : t("experiences.add")}
             </button>
+
+            {editingExperienceId && (
+              <button className="btn btn-secondary btn-full" type="button" onClick={resetForm}>
+                {t("common.cancel")}
+              </button>
+            )}
           </div>
         </form>
 
@@ -280,9 +341,6 @@ export default function AdminExperiencesPage() {
                             <h3>{experience.position}</h3>
                             <p>{experience.company}</p>
                           </div>
-                          <span className={experience.isCurrent ? "badge badge-live" : "badge badge-draft"}>
-                            {experience.isCurrent ? t("common.current") : t("common.past")}
-                          </span>
                         </div>
 
                         <div className="experience-row-meta">
@@ -294,6 +352,16 @@ export default function AdminExperiencesPage() {
                       </div>
 
                       <div className="experience-row-actions">
+                        <span className={experience.isCurrent ? "badge badge-live" : "badge badge-draft"}>
+                          {experience.isCurrent ? t("common.current") : t("common.past")}
+                        </span>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleEdit(experience)}
+                          type="button"
+                        >
+                          {t("common.edit")}
+                        </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => handleDelete(experience.id)}

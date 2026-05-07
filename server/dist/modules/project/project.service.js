@@ -28,8 +28,10 @@ async function createProject(input) {
     return prisma_1.default.project.create({
         data: {
             title: input.title,
+            titleTr: input.titleTr || null,
             slug,
             description: input.description,
+            descriptionTr: input.descriptionTr || null,
             technologies: input.technologies,
             githubUrl: input.githubUrl || null,
             liveUrl: input.liveUrl || null,
@@ -64,7 +66,9 @@ async function updateProject(id, input) {
         where: { id },
         data: {
             title: input.title,
+            titleTr: input.titleTr === "" ? null : input.titleTr,
             description: input.description,
+            descriptionTr: input.descriptionTr === "" ? null : input.descriptionTr,
             technologies: input.technologies,
             githubUrl: input.githubUrl === "" ? null : input.githubUrl,
             liveUrl: input.liveUrl === "" ? null : input.liveUrl,

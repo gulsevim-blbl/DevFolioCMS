@@ -129,7 +129,7 @@
 
 .project-row-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 168px;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, auto);
   gap: 18px;
   padding: 16px;
   border: 1px solid var(--border);
@@ -215,7 +215,8 @@
 
 .project-row-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
 }

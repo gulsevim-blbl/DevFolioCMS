@@ -17,6 +17,11 @@ export async function createExperience(payload: ExperiencePayload) {
   return response.data.data;
 }
 
+export async function updateExperience(id: number, payload: Partial<ExperiencePayload>) {
+  const response = await api.patch<ApiResponse<Experience>>(`/experiences/${id}`, payload);
+  return response.data.data;
+}
+
 export async function deleteExperience(id: number) {
   const response = await api.delete<ApiResponse<null>>(`/experiences/${id}`);
   return response.data;
