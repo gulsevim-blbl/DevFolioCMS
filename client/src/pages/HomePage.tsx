@@ -436,6 +436,19 @@ export default function HomePage() {
             </motion.article>
           ))}
         </div>
+
+        {profile.githubUrl && (
+          <motion.div className="portfolio-section-cta" variants={fadeInUp}>
+            <a
+              className="portfolio-button secondary"
+              href={profile.githubUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t("home.moreOnGithub")}
+            </a>
+          </motion.div>
+        )}
       </motion.section>
 
       <motion.section
